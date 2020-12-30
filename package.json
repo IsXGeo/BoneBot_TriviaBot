@@ -1,0 +1,16 @@
+{
+  "name": "discordbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node .",
+    "debug-trace": "node . --trace-warnings"
+  },
+  "author": "IsGeo",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "fuzzyset": "^1.0.6"
+  }
+}
