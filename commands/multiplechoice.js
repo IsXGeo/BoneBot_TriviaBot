@@ -13,7 +13,7 @@ fs.readFile('multiquestions.json', 'utf8', (err, data) => {
 })
 
 module.exports = {
-    name: 'multiplechoice',
+    commands: ['multiplechoice'],
     description: 'beings a multiple choice quiz',
     execute(message, questions, args) {
 

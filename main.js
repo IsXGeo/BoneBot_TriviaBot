@@ -1,11 +1,12 @@
+const path = require('path')
 const Discord = require('discord.js');
-
-const client = new Discord.Client();
-const prefix = '!'
 const fs = require('fs');
-const { get } = require('https');
 
-const myToken = 'NzkzNDE5MzA4MTY0MzE3MjE0.X-r_UA.2cgo3XFK9hcXSEv1giKNCIZ-2Iw'; // Add your own bot token here!
+const config = require('./config.json')
+const client = new Discord.Client();
+
+const { prefix } = require('./config.json')
+const { get } = require('https');
 
 client.commands = new Discord.Collection();
 
@@ -17,7 +18,7 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
-client.once('ready', () => {
+client.on('ready', async () => {
     console.log('BoneBot Mk.II has successfully booted!')
     client.user.setPresence({
         status: 'online',
@@ -27,35 +28,25 @@ client.once('ready', () => {
             url: 'https://www.twitch.tv/hensbo'
         }
     })
-});
 
-client.on('message', message => {
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    const baseFile = 'command-base.js'
+    const commandBase = require(`./commands/${baseFile}`)
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const commandName = args.shift().toLowerCase();
-
-    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases.includes(commandName));
-
-    if (!command) return;
-
-    if (command.args && !args.length) {
-        let reply = `You didn't provide any arguments, ${message.author}!`;
-
-        if (command.usage) {
-            reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+    const readCommands = dir => {
+        const files = fs.readdirSync(path.join(__dirname, dir))
+        for (const file of files) {
+            const stat = fs.lstatSync(path.join(__dirname, dir, file))
+            if (stat.isDirectory()) {
+                readCommands(path.join(dir, file))
+            } else if (file !== baseFile) {
+                const option = require(path.join(__dirname, dir, file))
+                //console.log(file, option)
+                commandBase(client, option)
+            }
         }
-
-        return message.channel.send(reply);
     }
 
-    try {
-        command.execute(message, client, args);
-    } catch (error) {
-        console.error(error);
-        message.reply('there was an error trying to execute that command!');
-    }
-
+    readCommands('commands')
 })
 
-client.login(myToken);
+client.login(config.token);

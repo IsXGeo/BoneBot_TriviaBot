@@ -3,9 +3,8 @@ const FuzzySet = require('fuzzyset');
 const fs = require('fs');
 
 module.exports = {
-    name: 'quiz',
-    description: 'beings a quiz',
-    execute(message, client, args) {
+    commands: ['quiz'],
+    callback: (message, args, text) => {
 
         const questionsObject = JSON.parse(fs.readFileSync('questions.json'));
         const questions = JSON.parse(fs.readFileSync('questions.json').toString());
@@ -18,6 +17,7 @@ module.exports = {
         //const client = new Discord.Client();
         const time = 20;
 
+        var client = message.client
         var timeout = false;
         var correct = false;
         var qNum = getRandomInt(maxNum);

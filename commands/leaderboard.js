@@ -2,9 +2,8 @@ const Discord = require('discord.js');
 const fs = require('fs');
 
 module.exports = {
-    name: 'top',
-    description: 'shows the leaderboards',
-    execute(message, client, args) {
+    commands: ['leaderboard', 'top'],
+    callback: (message, args, text) => {
 
         const userData = JSON.parse(fs.readFileSync('users.json'));
         var sortedData = userData;

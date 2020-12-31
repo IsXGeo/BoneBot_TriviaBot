@@ -3,7 +3,7 @@
         {
             "userid": "100835318239879168",
             "username": "IsGeo",
-            "totalWins": 44
+            "totalWins": 45
         },
         {
             "userid": "181311510193242112",
@@ -14,6 +14,11 @@
             "userid": "333435191186030592",
             "username": "Alphie",
             "totalWins": 1
+        },
+        {
+            "userid": "692866530391883877",
+            "username": "cycloneguys102",
+            "totalWins": 0
         }
     ]
 }

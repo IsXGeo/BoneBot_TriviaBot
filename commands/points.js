@@ -2,9 +2,8 @@ const Discord = require('discord.js');
 const fs = require('fs');
 
 module.exports = {
-    name: 'points',
-    description: 'get your score',
-    execute(message, client, args) {
+    commands: ['points'],
+    callback: (message, args, text) => {
 
         const userData = JSON.parse(fs.readFileSync('users.json'));
 
