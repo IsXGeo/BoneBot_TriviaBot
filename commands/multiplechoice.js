@@ -1,4 +1,16 @@
 const Discord = require('discord.js');
+const fs = require('fs');
+
+var multiquestions;
+
+fs.readFile('multiquestions.json', 'utf8', (err, data) => {
+    if (err) {
+        throw err;
+    }
+
+    multiquestions = JSON.parse(data.toString());
+
+})
 
 module.exports = {
     name: 'multiplechoice',

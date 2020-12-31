@@ -1,42 +1,93 @@
 const Discord = require('discord.js');
 const FuzzySet = require('fuzzyset');
+const fs = require('fs');
 
 module.exports = {
     name: 'quiz',
     description: 'beings a quiz',
-    execute(message, questions, questionsobject, time, client) {
+    execute(message, client, args) {
 
-        var mili = time * 1000;
-        var channelID = message.channel.id;
+        const questionsObject = JSON.parse(fs.readFileSync('questions.json'));
+        const questions = JSON.parse(fs.readFileSync('questions.json').toString());
+
+        const userData = JSON.parse(fs.readFileSync('users.json'));
 
         console.log('Quiz Initiated');
-        console.log('\x1b[33m' + questionsobject.trivia.length + ' \x1b[0mquestions found');
 
-        const maxNum = questionsobject.trivia.length;
-        //const maxNum = 4;
+        const maxNum = questionsObject.trivia.length;
+        //const client = new Discord.Client();
+        const time = 20;
+
         var timeout = false;
         var correct = false;
         var qNum = getRandomInt(maxNum);
 
+        var mili = time * 1000;
+        var channelID = message.channel.id;
+
+        var winner;
+        var totalWins;
+
+        var closeness = 0.85;
         var ans = lookingGood(questions.trivia[qNum].Answer);
         var qst = questions.trivia[qNum].Question;
+        var qstl = qst.length;
 
-        console.log('Question \x1b[33m' + qNum + ' \x1b[0mwas chosen. The answer is \x1b[32m' + ans);
+        if (qstl >= 15) {
+            closeness = 0.75;
+        }
+        if (qstl <= 5) {
+            closeness = 1;
+        }
 
-        fs = FuzzySet([ans], false);
+        console.log('Question \x1b[33m' + qNum + ' \x1b[0mwas chosen. The answer is \x1b[32m' + ans + '\x1b[0m');
 
-        client.on('message', message => {
-            if (message.channel.id == channelID && !message.author.bot && timeout != true) {
-                console.log(message.author.username + ' > ' + message.content);
-                console.log(fs)
-                var result = fs.get(message.content)
-                console.log(result)
-                if (result[0][0] >= 0.7) {
-                    console.log('Correct guess!')
-                    correct = true;
-                    setTimeout(timedout, 1);
+        set = FuzzySet([ans], true);
+
+        client.on('message', message2 => {
+            if (message2.channel.id == channelID && !message2.author.bot && timeout != true) {
+
+                var findUser = findElement(userData.users, "userid", message2.author.id);
+                var findIndex = getIndex(userData.users, "userid", message2.author.id);
+                if (findUser == null) {
+                    console.log('User not found! \n' + findUser);
+                    userData.users.push({
+                        "userid": message2.author.id,
+                        "username": message2.author.username,
+                        "totalWins": 0
+                    });
+                } else {
+                    totalWins = findUser.totalWins;
                 }
-                console.log(result[0][0])
+
+                var result = set.get(message2.content)
+                if (result != null) {
+                    if (result[0][0] >= closeness) {
+                        correct = true;
+                        winner = message2;
+                        winner.react('✅');
+                        userData.users[findIndex].totalWins = totalWins + 1
+                        setTimeout(timedout, 1);
+                        logTxt = '\x1b[32m' + message2.content + '\x1b[0m @% \x1b[32m' + result[0][0] + '\x1b[0m';
+                    } else {
+                        logTxt = '\x1b[31m' + message2.content + '\x1b[0m @% \x1b[32m' + result[0][0] + '\x1b[0m';
+                        message2.react('❌');
+                    }
+                    console.log('\x1b[33m' + message2.author.username + '\x1b[0m > ' + logTxt);
+                } else {
+                    logTxt = '\x1b[31m' + message2.content + '\x1b[0m @% \x1b[32m0';
+                    console.log('\x1b[33m' + message2.author.username + '\x1b[0m > ' + logTxt);
+                    message2.react('❌');
+                }
+
+                var data = JSON.stringify(userData, null, 4);
+
+                fs.writeFile('users.json', data, 'utf8', (err) => {
+                    if (err) {
+                        console.log(`Error writing file: ${err}`);
+                    }
+                })
+
             }
         })
 
@@ -49,7 +100,6 @@ module.exports = {
 
         message.channel.send(embededQ);
 
-
         setTimeout(timedout, mili);
 
         function timedout() {
@@ -59,6 +109,22 @@ module.exports = {
                     win()
                 } else {
                     lose()
+                }
+            }
+        }
+
+        function findElement(arr, name, value) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i][name] == value) {
+                    return arr[i];
+                }
+            }
+        }
+
+        function getIndex(arr, name, value) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i][name] == value) {
+                    return i;
                 }
             }
         }
@@ -78,7 +144,7 @@ module.exports = {
             const embededWin = new Discord.MessageEmbed()
                 .setColor('#0099ff')
                 .setTitle('🥳  Correct!')
-                .setDescription(message.author.username + ' guessed the correct answer!\nThe answer was **' + lookingGood(ans) + '**')
+                .setDescription('**' + winner.author.username + '** guessed the correct answer!\nThe answer was **' + lookingGood(ans) + '**')
                 .setTimestamp()
                 .setFooter('⌛  The next question will appear shortly.');
 
