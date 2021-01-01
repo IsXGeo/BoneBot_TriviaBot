@@ -7,8 +7,6 @@ require('dotenv').config()
 
 const client = new DiscordJS.Client();
 
-//const config = require('@root/config.json')
-
 const memberCount = require('@features/member-count-channel.js')
 
 var token;
