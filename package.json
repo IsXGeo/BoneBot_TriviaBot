@@ -4,13 +4,23 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "node .",
-    "debug-trace": "node . --trace-warnings"
+    "start": "node ."
   },
   "author": "IsGeo",
   "license": "MIT",
   "dependencies": {
     "discord.js": "^12.5.1",
-    "fuzzyset": "^1.0.6"
+    "discord.js-commando": "^0.10.0",
+    "fuzzyset": "^1.0.6",
+    "module-alias": "^2.2.2",
+    "mongoose": "^5.11.9"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@schema": "./schemas",
+    "@util": "./util",
+    "@features": "./features/features",
+    "@data": "./data",
+    "@commands": "./commands/commands"
   }
 }

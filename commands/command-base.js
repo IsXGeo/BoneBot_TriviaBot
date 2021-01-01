@@ -1,4 +1,4 @@
-const { prefix } = require('../config.json')
+const { prefix } = require('@root/config.json')
 
 const validatePermissions = (permission) => {
     const validPermissions = [
@@ -59,8 +59,6 @@ module.exports = (client, commandOptions) => {
         commands = [commands]
     }
 
-    console.log(`Registering command "${commands[0]}"`)
-
     if (permissions.length) {
         if (typeof permissions === 'string') {
             permissions = [permissions]
@@ -70,10 +68,17 @@ module.exports = (client, commandOptions) => {
 
     // Listen for messages
     client.on('message', message => {
-        const { member, content, guild } = message
+        const { member, content, guild, channel } = message
 
         for (const alias of commands) {
+            const command = `${prefix}${alias.toLowerCase()}`
+
             if (content.toLowerCase().startsWith(`${prefix}${alias.toLowerCase()}`)) {
+                (
+                    content.toLowerCase().startsWith(`${command} `) ||
+                    content.toLowerCase() === command
+                )
+
 
                 for (const permission of permissions) {
                     if (!member.hasPermission(permission)) {

@@ -1,12 +1,17 @@
+require('module-alias/register')
+
 const path = require('path')
 const Discord = require('discord.js');
 const fs = require('fs');
 
-const config = require('./config.json')
+const config = require('@root/config.json')
 const client = new Discord.Client();
 
-const { prefix } = require('./config.json')
+const { prefix } = require('@root/config.json')
 const { get } = require('https');
+
+const memberCount = require('@features/member-count.js')
+const mongo = require('@util/mongo.js')
 
 client.commands = new Discord.Collection();
 
@@ -20,6 +25,18 @@ for (const file of commandFiles) {
 
 client.on('ready', async () => {
     console.log('BoneBot Mk.II has successfully booted!')
+
+    await mongo().then(mongoose => {
+        try {
+            console.log('Connected to mongo')
+        } finally {
+            mongoose.connection.close()
+        }
+
+    })
+
+    memberCount(client)
+
     client.user.setPresence({
         status: 'online',
         activity: {
@@ -28,25 +45,6 @@ client.on('ready', async () => {
             url: 'https://www.twitch.tv/hensbo'
         }
     })
-
-    const baseFile = 'command-base.js'
-    const commandBase = require(`./commands/${baseFile}`)
-
-    const readCommands = dir => {
-        const files = fs.readdirSync(path.join(__dirname, dir))
-        for (const file of files) {
-            const stat = fs.lstatSync(path.join(__dirname, dir, file))
-            if (stat.isDirectory()) {
-                readCommands(path.join(dir, file))
-            } else if (file !== baseFile) {
-                const option = require(path.join(__dirname, dir, file))
-                //console.log(file, option)
-                commandBase(client, option)
-            }
-        }
-    }
-
-    readCommands('commands')
 })
 
 client.login(config.token);
