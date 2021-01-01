@@ -1,9 +1,10 @@
 {
     "verbose": true,
     "ignore": [
-        "/data",
+        "data/*",
         ".vscode",
-        "README.md"
+        "README.md",
+        ".gitignore"
     ],
     "execMap": {
         "rb": "ruby",
