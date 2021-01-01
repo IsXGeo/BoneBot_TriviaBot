@@ -9,11 +9,9 @@ const client = new DiscordJS.Client();
 
 const memberCount = require('@features/member-count-channel.js')
 
-var token;
-
 client.on('ready', () => {
     new WOKCommands(client, 'commands', 'features')
-        .setDefaultPrefix('!');
+        .setDefaultPrefix('$');
 
     memberCount(client)
 
@@ -21,8 +19,8 @@ client.on('ready', () => {
         status: 'online',
         activity: {
             name: 'with depression',
-            type: 'STREAMING',
-            url: 'https://www.twitch.tv/hensbo'
+            type: 'COMPETING',
+            url: ''
         }
     })
 })
