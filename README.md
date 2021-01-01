@@ -1,3 +1,5 @@
+Yes, you can find the old bot tokens in older commits. Mistake made, lesson learned. They have since been regenerated.
+
 # TODO
 ## GENERAL TODO
 - [X] Add embeded messages that look nice.
