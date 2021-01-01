@@ -10,7 +10,6 @@
   "license": "MIT",
   "dependencies": {
     "discord.js": "^12.5.1",
-    "discord.js-commando": "^0.10.0",
     "fuzzyset": "^1.0.6",
     "module-alias": "^2.2.2",
     "mongoose": "^5.11.9"
