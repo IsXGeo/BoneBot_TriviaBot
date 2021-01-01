@@ -6,14 +6,14 @@
         {
             "label": "echo",
             "type": "shell",
-            "command": "node ."
+            "command": "nodemon"
         },
         {
             "type": "npm",
             "script": "start",
             "problemMatcher": [],
             "label": "npm: start",
-            "detail": "node .",
+            "detail": "nodemon",
             "group": {
                 "kind": "build",
                 "isDefault": true

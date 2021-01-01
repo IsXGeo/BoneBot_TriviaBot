@@ -14,3 +14,7 @@ module.exports = (client) => {
     const guild = client.guilds.cache.get('752781086882529280')
     updateMembers(guild)
 }
+
+module.exports.config = {
+    displayName: 'Member Count Channel'
+}

@@ -6,10 +6,10 @@ module.exports = {
     commands: ['quiz'],
     callback: (message, args, text) => {
 
-        const questionsObject = JSON.parse(fs.readFileSync('questions.json'));
-        const questions = JSON.parse(fs.readFileSync('questions.json').toString());
+        const questionsObject = JSON.parse(fs.readFileSync('./data/questions.json'));
+        const questions = JSON.parse(fs.readFileSync('./data/questions.json').toString());
 
-        const userData = JSON.parse(fs.readFileSync('users.json'));
+        const userData = JSON.parse(fs.readFileSync('./data/users.json'));
 
         console.log('Quiz Initiated');
 
@@ -82,7 +82,7 @@ module.exports = {
 
                 var data = JSON.stringify(userData, null, 4);
 
-                fs.writeFile('users.json', data, 'utf8', (err) => {
+                fs.writeFile('./data/users.json', data, 'utf8', (err) => {
                     if (err) {
                         console.log(`Error writing file: ${err}`);
                     }

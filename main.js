@@ -1,39 +1,19 @@
-require('module-alias/register')
+const DiscordJS = require('discord.js');
+const WOKCommands = require('wokcommands')
 
-const path = require('path')
-const Discord = require('discord.js');
-const fs = require('fs');
+require('module-alias/register')
+require('dotenv').config()
+
+const client = new DiscordJS.Client();
 
 const config = require('@root/config.json')
-const client = new Discord.Client();
 
-const { prefix } = require('@root/config.json')
-const { get } = require('https');
+const memberCount = require('@features/member-count-channel.js')
 
-const memberCount = require('@features/member-count.js')
-const mongo = require('@util/mongo.js')
-
-client.commands = new Discord.Collection();
-
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-
-    client.commands.set(command.name, command);
-}
-
-client.on('ready', async () => {
+client.on('ready', () => {
     console.log('BoneBot Mk.II has successfully booted!')
 
-    await mongo().then(mongoose => {
-        try {
-            console.log('Connected to mongo')
-        } finally {
-            mongoose.connection.close()
-        }
-
-    })
+    new WOKCommands(client, 'commands', 'features')
 
     memberCount(client)
 

@@ -2,10 +2,12 @@ const Discord = require('discord.js');
 const fs = require('fs');
 
 module.exports = {
+    category: 'Trivia',
+    description: 'Shows the top scorers on the server',
     commands: ['leaderboard', 'top'],
     callback: (message, args, text) => {
 
-        const userData = JSON.parse(fs.readFileSync('users.json'));
+        const userData = JSON.parse(fs.readFileSync('./data/users.json'));
         var sortedData = userData;
         sortedData.users.sort((a, b) => parseInt(b.totalWins) - parseInt(a.totalWins));
 

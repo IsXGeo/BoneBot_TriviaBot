@@ -1,0 +1,12 @@
+{
+    "verbose": true,
+    "ignore": [
+        "/data",
+        ".vscode",
+        "README.md"
+    ],
+    "execMap": {
+        "rb": "ruby",
+        "pde": "processing --sketch={{pwd}} --run"
+    }
+}
