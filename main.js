@@ -18,7 +18,7 @@ client.on('ready', () => {
     client.user.setPresence({
         status: 'online',
         activity: {
-            name: 'with fire.',
+            name: 'with Discord.js',
             type: 'PLAYING'
         }
     })
