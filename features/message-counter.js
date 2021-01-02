@@ -18,7 +18,7 @@ module.exports = (client) => {
         var data = JSON.stringify(stat, null, 4)
         fs.writeFileSync(require.resolve('$data/stats.json'), data, 'utf8', (err) => {
             if (err) {
-                console.log(`Error writing file: ${err}`);
+                console.log(`Error writing file: ${err}`)
             }
         })
 
