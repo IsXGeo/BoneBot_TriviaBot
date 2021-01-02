@@ -3,7 +3,7 @@ const fs = require('fs')
 module.exports = (client) => {
     const channelId = '794803806402641940'
 
-    const interval = 5 * 60 * 1000
+    const interval = 300000
     
     const stats = JSON.parse(fs.readFileSync(require.resolve('$data/stats.json')))
 
@@ -18,7 +18,7 @@ module.exports = (client) => {
         var data = JSON.stringify(stat, null, 4)
         fs.writeFileSync(require.resolve('$data/stats.json'), data, 'utf8', (err) => {
             if (err) {
-                console.log(`Error writing file: ${err}`)
+                console.log(`Error writing file: ${err}`);
             }
         })
 
