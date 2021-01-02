@@ -26,13 +26,4 @@ client.on('ready', () => {
     })
 })
 
-fs.access(require.resolve('$root/config.json'), fs.F_OK, (err) => {
-    if (err) {
-        console.log('No local-config found, using convar')
-        client.login(process.env.DJS_TOKEN)
-        return
-    }
-    console.log('Config found, ignoring convar')
-    var config = require('$root/config.json')
-    client.login(config.token)
-})
+client.login(process.env.DJS_TOKEN)
