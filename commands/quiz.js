@@ -14,7 +14,6 @@ module.exports = {
         console.log('Quiz Initiated');
 
         const maxNum = questionsObject.trivia.length;
-        //const client = new Discord.Client();
         const time = 20;
 
         var client = message.client
@@ -82,7 +81,7 @@ module.exports = {
 
                 var data = JSON.stringify(userData, null, 4);
 
-                fs.writeFile('./data/users.json', data, 'utf8', (err) => {
+                fs.writeFile(require.resolve('$data/users.json'), data, 'utf8', (err) => {
                     if (err) {
                         console.log(`Error writing file: ${err}`);
                     }
