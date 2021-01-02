@@ -15,11 +15,11 @@ This bot is not built to be used on multiple servers, I designed it for my perso
 - [ ] Add the ability to play specific categories.
 - [ ] Add the ability to have multiple questions run concurrently.
 - [ ] Make concurrent questions show a match leaderboard aswell as the server leaderboard at the end.
-- [ ] Add the ability to change the bot prefix to
-- [ ] Add user editable settings
-- [ ] Get a proper host for the bot instead of just my pc
-- [X] Make bot react to players answers
+- [ ] Add the ability to change the bot prefix to.
+- [ ] Add user editable settings.
+- [ ] Get a proper host for the bot instead of just my pc.
+- [X] Make bot react to players answers.
 
 ## MULTIPLE CHOICE TODO
-- [ ] Find and add multiple choice questions
-- [ ] Add the game logic for multiple choice questions to work with
+- [ ] Find and add multiple choice questions.
+- [ ] Add the game logic for multiple choice questions to work with.
