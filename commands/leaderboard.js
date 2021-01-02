@@ -7,7 +7,7 @@ module.exports = {
     commands: ['leaderboard', 'top'],
     callback: (message) => {
 
-        const userData = JSON.parse(fs.readFileSync(require.resolve('$data/users.json')))
+        const userData = JSON.parse(fs.readFileSync('./data/users.json'))
         var sortedData = userData
         sortedData.users.sort((a, b) => parseInt(b.totalWins) - parseInt(a.totalWins))
 

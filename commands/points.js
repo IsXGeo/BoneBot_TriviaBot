@@ -1,11 +1,10 @@
-const Discord = require('discord.js');
 const fs = require('fs');
 
 module.exports = {
     commands: ['points'],
     callback: (message, args, text) => {
 
-        const userData = JSON.parse(fs.readFileSync(require.resolve('$data/users.json')));
+        const userData = JSON.parse(fs.readFileSync('./data/users.json'));
 
         var findUser = findElement(userData.users, "userid", message.author.id);
         var findIndex = getIndex(userData.users, "userid", message.author.id);

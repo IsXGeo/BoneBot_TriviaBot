@@ -5,7 +5,7 @@ module.exports = (client) => {
 
     const interval = 300000
     
-    const stats = JSON.parse(fs.readFileSync(require.resolve('$data/stats.json')))
+    const stats = JSON.parse(fs.readFileSync('./data/stats.json'))
 
     const theGuild = client.guilds.cache.get('752781086882529280')
 
@@ -16,7 +16,7 @@ module.exports = (client) => {
     const updateMessages = (stat) => {
 
         var data = JSON.stringify(stat, null, 4)
-        fs.writeFileSync(require.resolve('$data/stats.json'), data, 'utf8', (err) => {
+        fs.writeFileSync('./data/stats.json', data, 'utf8', (err) => {
             if (err) {
                 console.log(`Error writing file: ${err}`);
             }
