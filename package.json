@@ -18,7 +18,7 @@
   },
   "_moduleAliases": {
     "$root": ".",
-    "$schema": "./schemas",
+    "$schemas": "./schemas",
     "$util": "./util",
     "$features": "./features",
     "$data": "./data",

@@ -1,5 +1,7 @@
 Yes, you can find the old bot tokens in older commits. Mistake made, lesson learned. They have since been regenerated.
 
+This bot is not built to be used on multiple servers, I designed it for my personal use and enjoyment so do not expect multi-server features.
+
 
 # TODO
 ## GENERAL TODO

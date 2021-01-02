@@ -7,7 +7,8 @@ require('dotenv').config()
 
 const client = new DiscordJS.Client()
 
-const memberCount = require('$features/member-count-channel.js')
+const memberCount = require('$features/member-count-channel')
+const messageCounter = require('$features/message-counter')
 
 client.on('ready', () => {
     new WOKCommands(client, 'commands', 'features')
