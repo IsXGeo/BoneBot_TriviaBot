@@ -15,6 +15,7 @@ client.on('ready', () => {
         .setDefaultPrefix('$')
 
     memberCount(client)
+    messageCounter(client)
 
     client.user.setPresence({
         status: 'online',
