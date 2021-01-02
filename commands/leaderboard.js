@@ -5,11 +5,11 @@ module.exports = {
     category: 'Trivia',
     description: 'Shows the top scorers on the server',
     commands: ['leaderboard', 'top'],
-    callback: (message, args, text) => {
+    callback: (message) => {
 
-        const userData = JSON.parse(fs.readFileSync('./data/users.json'));
-        var sortedData = userData;
-        sortedData.users.sort((a, b) => parseInt(b.totalWins) - parseInt(a.totalWins));
+        const userData = JSON.parse(fs.readFileSync(require.resolve('$data/users.json')))
+        var sortedData = userData
+        sortedData.users.sort((a, b) => parseInt(b.totalWins) - parseInt(a.totalWins))
 
         if (sortedData.users[0].totalWins == 0) {
             const embededLose = new Discord.MessageEmbed()

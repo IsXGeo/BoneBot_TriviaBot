@@ -1,5 +1,6 @@
 Yes, you can find the old bot tokens in older commits. Mistake made, lesson learned. They have since been regenerated.
 
+This bot is not built to be used on multiple servers, I designed it for my personal use and enjoyment so do not expect multi-server features.
 # TODO
 ## GENERAL TODO
 - [X] Add embeded messages that look nice.
@@ -12,10 +13,10 @@ Yes, you can find the old bot tokens in older commits. Mistake made, lesson lear
 - [ ] Add the ability to play specific categories.
 - [ ] Add the ability to have multiple questions run concurrently.
 - [ ] Make concurrent questions show a match leaderboard aswell as the server leaderboard at the end.
-- [ ] Add the ability to change the bot prefix to
-- [ ] Add user editable settings
-- [ ] Get a proper host for the bot instead of just my pc
-- [X] Make bot react to players answers
+- [ ] Add the ability to change the bot prefix to.
+- [ ] Add user editable settings.
+- [ ] Get a proper host for the bot instead of just my pc.
+- [X] Make bot react to players answers.
 
 ## MULTIPLE CHOICE TODO
 - [ ] Find and add multiple choice questions
