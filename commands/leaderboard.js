@@ -5,7 +5,7 @@ module.exports = {
     category: 'Trivia',
     description: 'Shows the top scorers on the server',
     commands: ['leaderboard', 'top'],
-    callback: (message) => {
+    callback: ({ message }) => {
 
         const userData = JSON.parse(fs.readFileSync('./data/users.json'))
         var sortedData = userData

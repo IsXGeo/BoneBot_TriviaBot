@@ -16,5 +16,5 @@ module.exports = (client) => {
 }
 
 module.exports.config = {
-    displayName: 'Member Count Channel'
+    displayName: 'Member Count Channel',
 }

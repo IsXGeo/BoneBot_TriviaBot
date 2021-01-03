@@ -4,7 +4,7 @@ const fs = require('fs');
 
 module.exports = {
     commands: ['quiz'],
-    callback: (message, args, text) => {
+    callback: ({ message }) => {
 
         const questionsObject = JSON.parse(fs.readFileSync('./data/questions.json'));
         const questions = JSON.parse(fs.readFileSync('./data/questions.json').toString());

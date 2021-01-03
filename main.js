@@ -4,17 +4,29 @@ const fs = require('fs')
 
 require('dotenv').config()
 
-const client = new DiscordJS.Client()
+const client = new DiscordJS.Client({
+    partials: ['MESSAGE', 'REACTION'],
+})
 
 const memberCount = require('./features/member-count-channel')
 const messageCounter = require('./features/message-counter')
 
 client.on('ready', () => {
-    new WOKCommands(client, 'commands', 'features')
-        .setDefaultPrefix('!')
+
+    const messagesPath = ''
+
+
+    new WOKCommands(client, {
+        commandsDir: 'commands',
+        featuresDir: 'features',
+        messagesPath,
+        showWarns: true,
+        testServers: '787991275944935424'
+
+    })
+        .setDefaultPrefix(process.env.PREFIX)
 
     memberCount(client)
-    messageCounter(client)
 
     client.user.setPresence({
         status: 'online',
@@ -25,13 +37,4 @@ client.on('ready', () => {
     })
 })
 
-fs.access('./config.json', fs.F_OK, (err) => {
-    if (err) {
-        console.log('No local-config found, using convar')
-        client.login(process.env.DJS_TOKEN)
-        return
-    }
-    console.log('Config found, ignoring convar')
-    var config = require('./config.json')
-    client.login(config.token)
-})
+client.login(process.env.DJS_TOKEN)

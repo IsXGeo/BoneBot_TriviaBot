@@ -2,7 +2,7 @@ const fs = require('fs');
 
 module.exports = {
     commands: ['points'],
-    callback: (message, args, text) => {
+    callback: ({ message }) => {
 
         const userData = JSON.parse(fs.readFileSync('./data/users.json'));
 
