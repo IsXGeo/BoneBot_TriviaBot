@@ -11,6 +11,15 @@
   "dependencies": {
     "discord.js": "^12.5.1",
     "fuzzyset": "^1.0.6",
+    "module-alias": "^2.2.2",
+    "mongoose": "^5.11.9",
     "wokcommands": "^1.2.0"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@features": "./features",
+    "@commands": "./commands",
+    "@data": "./data",
+    "@util": "./util"
   }
 }
