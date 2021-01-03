@@ -17,4 +17,6 @@ module.exports = (client) => {
 
 module.exports.config = {
     displayName: 'Member Count Channel',
+    dbName: 'MemberCount',
+    loadDBFirst: true
 }
