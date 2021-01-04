@@ -2,112 +2,139 @@ const Discord = require('discord.js');
 const FuzzySet = require('fuzzyset');
 const fs = require('fs');
 
+require('dotenv').config();
+
 module.exports = {
     commands: ['quiz'],
-    callback: ({ message }) => {
+    maxArgs: 1,
+    syntaxError: 'Incorrect syntax! Use `{PREFIX}quiz (NumOfQuestions)` eg. `{PREFIX}quiz 15`',
+    callback: async ({ message, args }) => {
 
-        const questionsObject = JSON.parse(fs.readFileSync('./data/questions.json'));
-        const questions = JSON.parse(fs.readFileSync('./data/questions.json').toString());
+        var times;
 
-        const userData = JSON.parse(fs.readFileSync('./data/users.json'));
+        if (args[0] == null) { times = 10; } else { times = args[0]; }
 
-        console.log('Quiz Initiated');
+        times = parseInt(times);
 
-        const maxNum = questionsObject.trivia.length;
-        const time = 20;
+        if (Number.isInteger(times)) {
 
-        var client = message.client
-        var timeout = false;
-        var correct = false;
-        var qNum = getRandomInt(maxNum);
+            const questionsObject = JSON.parse(fs.readFileSync('./data/questions.json'));
+            const questions = JSON.parse(fs.readFileSync('./data/questions.json').toString());
+            const userData = JSON.parse(fs.readFileSync('./data/users.json'));
 
-        var mili = time * 1000;
-        var channelID = message.channel.id;
+            const players = [];
 
-        var winner;
-        var totalWins;
+            const PREFIX = process.env.PREFIX;
 
-        var closeness = 0.85;
-        var ans = lookingGood(questions.trivia[qNum].Answer);
-        var qst = questions.trivia[qNum].Question;
-        var qstl = qst.length;
+            const maxNum = questionsObject.trivia.length;
+            var closeness = process.env.CLOSENESS;
 
-        if (qstl >= 15) {
-            closeness = 0.75;
-        }
-        if (qstl <= 5) {
-            closeness = 1;
-        }
+            const time = process.env.TIME;
+            const mili = time * 1000;
 
-        console.log('Question \x1b[33m' + qNum + ' \x1b[0mwas chosen. The answer is \x1b[32m' + ans + '\x1b[0m');
+            var client = message.client;
 
-        set = FuzzySet([ans], true);
+            var channelID = message.channel.id;
 
-        client.on('message', message2 => {
-            if (message2.channel.id == channelID && !message2.author.bot && timeout != true) {
+            for (i = 0; i < times; i++) {
+                var timeout = false;
+                var correct = false;
+                var qNum = getRandomInt(maxNum);
 
-                var findUser = findElement(userData.users, "userid", message2.author.id);
-                var findIndex = getIndex(userData.users, "userid", message2.author.id);
-                if (findUser == null) {
-                    console.log('User not found! \n' + findUser);
-                    userData.users.push({
-                        "userid": message2.author.id,
-                        "username": message2.author.username,
-                        "totalWins": 0
-                    });
-                } else {
-                    totalWins = findUser.totalWins;
-                }
+                var winner;
+                var totalWins;
 
-                var result = set.get(message2.content)
-                if (result != null) {
-                    if (result[0][0] >= closeness) {
-                        correct = true;
-                        winner = message2;
-                        winner.react('✅');
-                        userData.users[findIndex].totalWins = totalWins + 1
-                        setTimeout(timedout, 1);
-                        logTxt = '\x1b[32m' + message2.content + '\x1b[0m @% \x1b[32m' + result[0][0] + '\x1b[0m';
-                    } else {
-                        logTxt = '\x1b[31m' + message2.content + '\x1b[0m @% \x1b[32m' + result[0][0] + '\x1b[0m';
-                        message2.react('❌');
+                var ans = lookingGood(questions.trivia[qNum].Answer);
+                var qst = questions.trivia[qNum].Question;
+                var qstl = qst.length;
+
+                if (qstl >= 15) { closeness = 0.75; }
+                if (Number.isInteger(questions.trivia[qNum].Answer)) { closeness = 1; }
+
+                console.log('Question \x1b[33m' + qNum + ' \x1b[0mwas chosen. The answer is \x1b[32m' + ans + '\x1b[0m');
+                set = FuzzySet([ans], true);
+
+                const embededQ = new Discord.MessageEmbed()
+                    .setColor('#0099ff')
+                    .setTitle('❓  Quiz Question ' + (i + 1))
+                    .setDescription(qst)
+                    .setTimestamp()
+                    .setFooter('⌛  The answer will be revealed in ' + time + ' seconds.');
+
+                message.channel.send(embededQ);
+
+                client.on('message', message2 => {
+                    if (message2.channel.id == channelID && !message2.author.bot && timeout != true) {
+
+                        var findUser = findElement(userData.users, "userid", message2.author.id);
+                        var findIndex = getIndex(userData.users, "userid", message2.author.id);
+                        if (findUser == null) {
+                            console.log('User not found! \n' + findUser);
+                            userData.users.push({
+                                "userid": message2.author.id,
+                                "username": message2.author.username,
+                                "totalWins": 0
+                            });
+                            players.push(message2.author.id);
+                        } else {
+                            totalWins = findUser.totalWins;
+                        }
+
+                        var result = set.get(message2.content);
+                        if (result != null) {
+                            if (result[0][0] >= closeness) {
+                                correct = true;
+                                winner = message2;
+                                winner.react('✅');
+                                userData.users[findIndex].totalWins = totalWins + 1;
+                                setTimeout(timedout, 1);
+                                logTxt = '\x1b[32m' + message2.content + '\x1b[0m @% \x1b[32m' + result[0][0] + '\x1b[0m';
+                            } else {
+                                logTxt = '\x1b[31m' + message2.content + '\x1b[0m @% \x1b[32m' + result[0][0] + '\x1b[0m';
+                                message2.react('❌');
+                            }
+                            console.log('\x1b[33m' + message2.author.username + '\x1b[0m > ' + logTxt);
+                        } else {
+                            logTxt = '\x1b[31m' + message2.content + '\x1b[0m @% \x1b[32m0';
+                            console.log('\x1b[33m' + message2.author.username + '\x1b[0m > ' + logTxt);
+                            message2.react('❌');
+                        }
+
+                        var data = JSON.stringify(userData, null, 4);
+
+                        fs.writeFile('./data/users.json', data, 'utf8', (err) => {
+                            if (err) {
+                                console.log(`Error writing file: ${err}`);
+                            }
+                        });
                     }
-                    console.log('\x1b[33m' + message2.author.username + '\x1b[0m > ' + logTxt);
-                } else {
-                    logTxt = '\x1b[31m' + message2.content + '\x1b[0m @% \x1b[32m0';
-                    console.log('\x1b[33m' + message2.author.username + '\x1b[0m > ' + logTxt);
-                    message2.react('❌');
-                }
-
-                var data = JSON.stringify(userData, null, 4);
-
-                fs.writeFile('./data/users.json', data, 'utf8', (err) => {
-                    if (err) {
-                        console.log(`Error writing file: ${err}`);
-                    }
-                })
-
+                });
+                setTimeout(timedout, mili);
+                poll(correct);
+                await wait(mili);
             }
-        })
+        } else {
+            message.reply(`Incorrect syntax! Please input a numerical value!`);
+        }
 
-        const embededQ = new Discord.MessageEmbed()
-            .setColor('#0099ff')
-            .setTitle('❓  Quiz Question ' + qNum)
-            .setDescription(qst)
-            .setTimestamp()
-            .setFooter('⌛  The answer will be revealed in ' + time + ' seconds.');
+        // End if integer | ======================================================================================= |
 
-        message.channel.send(embededQ);
+        function poll(correct) {
+            if (correct == false) { wait(1000); } else { console.log('POLL = CORRECT'); }
+        }
 
-        setTimeout(timedout, mili);
+
+        function wait(miliseconds) {
+            return new Promise(resolve => setTimeout(resolve, miliseconds));
+        }
 
         function timedout() {
             if (timeout == false) {
                 timeout = true;
                 if (correct == true) {
-                    win()
+                    win();
                 } else {
-                    lose()
+                    lose();
                 }
             }
         }
@@ -128,7 +155,7 @@ module.exports = {
             }
         }
 
-        function lose() {
+        async function lose() {
             const embededLose = new Discord.MessageEmbed()
                 .setColor('#0099ff')
                 .setTitle('😭  Time is up!')
@@ -137,9 +164,10 @@ module.exports = {
                 .setFooter('⌛  The next question will appear shortly.');
 
             message.channel.send(embededLose);
+            await wait(2000);
         }
 
-        function win() {
+        async function win() {
             const embededWin = new Discord.MessageEmbed()
                 .setColor('#0099ff')
                 .setTitle('🥳  Correct!')
@@ -148,6 +176,7 @@ module.exports = {
                 .setFooter('⌛  The next question will appear shortly.');
 
             message.channel.send(embededWin);
+            await wait(2000);
         }
 
         function getRandomInt(max) {
@@ -160,4 +189,4 @@ module.exports = {
         }
 
     }
-}
+};

@@ -1,9 +1,8 @@
-const mongoose = require('mongoose')
-const mongoPath = require(process.env.MONGO_URI)
-
-console.log(mongoPath)
+require('dotenv').config();
+const mongoose = require('mongoose');
+const mongoPath = process.env.MONGO_URI;
 
 module.exports = async () => {
-    await mongoose.connect(mongoPath)
-    return mongoose
-}
+    await mongoose.connect(mongoPath);
+    return mongoose;
+};

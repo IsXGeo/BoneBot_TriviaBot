@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "nodemon"
+    "nodemon": "nodemon"
   },
   "author": "IsGeo",
   "license": "MIT",
@@ -14,6 +14,7 @@
     "jshint": "^2.12.0",
     "module-alias": "^2.2.2",
     "mongoose": "^5.11.9",
+    "promise-abortable": "^1.2.6",
     "wokcommands": "^1.2.0"
   },
   "_moduleAliases": {
@@ -22,5 +23,6 @@
     "@commands": "./commands",
     "@data": "./data",
     "@util": "./util"
-  }
+  },
+  "devDependencies": {}
 }

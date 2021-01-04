@@ -1,7 +1,6 @@
 {
     "jshint.options": {
-        "esversion": 6,
-        "unused": true,
+        "esversion": 9,
         "bitwise": true
     },
 }
