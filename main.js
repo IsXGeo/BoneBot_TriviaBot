@@ -1,40 +1,38 @@
-require('module-alias/register')
-const DiscordJS = require('discord.js')
-const WOKCommands = require('wokcommands')
-const fs = require('fs')
+const DiscordJS = require('discord.js');
+const WOKCommands = require('wokcommands');
+const fs = require('fs');
 
-require('dotenv').config()
+require('dotenv').config();
 
 const client = new DiscordJS.Client({
     partials: ['MESSAGE', 'REACTION'],
-})
+});
 
-const memberCount = require('@features/member-count-channel')
-const messageCounter = require('@features/message-counter')
-const mongo = require('@util/mongo')
+const memberCount = require('./features/member-count-channel');
+const mongo = require('./util/mongo');
 
 client.on('ready', () => {
 
-    const messagesPath = ''
+    const messagesPath = require('./data/messages.json');
 
     const dbOptions = {
         keepAlive: true,
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
-    }
+    };
 
 
     new WOKCommands(client, {
         commandsDir: 'commands',
         featuresDir: 'features',
         messagesPath,
-        dbOptions
+        dbOptions,
+        testServers: '752781086882529280'
     })
-        .setMongoPath(process.env.MONGO_URI)
-        .setDefaultPrefix(process.env.PREFIX)
+        .setDefaultPrefix(process.env.PREFIX);
 
-    memberCount(client)
+    memberCount(client);
 
     client.user.setPresence({
         status: 'online',
@@ -42,7 +40,7 @@ client.on('ready', () => {
             name: 'with Discord.js',
             type: 'PLAYING'
         }
-    })
-})
+    });
+});
 
-client.login(process.env.DJS_TOKEN)
+client.login(process.env.DEVBOT_TOKEN);
