@@ -36,6 +36,53 @@ module.exports = {
 
             var channelID = message.channel.id;
 
+            client.on('message', message2 => {
+                if (message2.channel.id == channelID && !message2.author.bot && timeout != true) {
+
+                    var findUser = findElement(userData.users, "userid", message2.author.id);
+                    var findIndex = getIndex(userData.users, "userid", message2.author.id);
+                    if (findUser == null) {
+                        console.log('User not found! \n' + findUser);
+                        userData.users.push({
+                            "userid": message2.author.id,
+                            "username": message2.author.username,
+                            "totalWins": 0
+                        });
+                        players.push(message2.author.id);
+                    } else {
+                        totalWins = findUser.totalWins;
+                    }
+
+                    var result = set.get(message2.content);
+                    if (result != null) {
+                        if (result[0][0] >= closeness) {
+                            correct = true;
+                            winner = message2;
+                            winner.react('✅');
+                            userData.users[findIndex].totalWins = totalWins + 1;
+                            setTimeout(timedout, 1);
+                            logTxt = '\x1b[32m' + message2.content + '\x1b[0m @% \x1b[32m' + result[0][0] + '\x1b[0m';
+                        } else {
+                            logTxt = '\x1b[31m' + message2.content + '\x1b[0m @% \x1b[32m' + result[0][0] + '\x1b[0m';
+                            message2.react('❌');
+                        }
+                        console.log('\x1b[33m' + message2.author.username + '\x1b[0m > ' + logTxt);
+                    } else {
+                        logTxt = '\x1b[31m' + message2.content + '\x1b[0m @% \x1b[32m0';
+                        console.log('\x1b[33m' + message2.author.username + '\x1b[0m > ' + logTxt);
+                        message2.react('❌');
+                    }
+
+                    var data = JSON.stringify(userData, null, 4);
+
+                    fs.writeFile('./data/users.json', data, 'utf8', (err) => {
+                        if (err) {
+                            console.log(`Error writing file: ${err}`);
+                        }
+                    });
+                }
+            });
+
             for (i = 0; i < times; i++) {
                 var timeout = false;
                 var correct = false;
@@ -63,52 +110,6 @@ module.exports = {
 
                 message.channel.send(embededQ);
 
-                client.on('message', message2 => {
-                    if (message2.channel.id == channelID && !message2.author.bot && timeout != true) {
-
-                        var findUser = findElement(userData.users, "userid", message2.author.id);
-                        var findIndex = getIndex(userData.users, "userid", message2.author.id);
-                        if (findUser == null) {
-                            console.log('User not found! \n' + findUser);
-                            userData.users.push({
-                                "userid": message2.author.id,
-                                "username": message2.author.username,
-                                "totalWins": 0
-                            });
-                            players.push(message2.author.id);
-                        } else {
-                            totalWins = findUser.totalWins;
-                        }
-
-                        var result = set.get(message2.content);
-                        if (result != null) {
-                            if (result[0][0] >= closeness) {
-                                correct = true;
-                                winner = message2;
-                                winner.react('✅');
-                                userData.users[findIndex].totalWins = totalWins + 1;
-                                setTimeout(timedout, 1);
-                                logTxt = '\x1b[32m' + message2.content + '\x1b[0m @% \x1b[32m' + result[0][0] + '\x1b[0m';
-                            } else {
-                                logTxt = '\x1b[31m' + message2.content + '\x1b[0m @% \x1b[32m' + result[0][0] + '\x1b[0m';
-                                message2.react('❌');
-                            }
-                            console.log('\x1b[33m' + message2.author.username + '\x1b[0m > ' + logTxt);
-                        } else {
-                            logTxt = '\x1b[31m' + message2.content + '\x1b[0m @% \x1b[32m0';
-                            console.log('\x1b[33m' + message2.author.username + '\x1b[0m > ' + logTxt);
-                            message2.react('❌');
-                        }
-
-                        var data = JSON.stringify(userData, null, 4);
-
-                        fs.writeFile('./data/users.json', data, 'utf8', (err) => {
-                            if (err) {
-                                console.log(`Error writing file: ${err}`);
-                            }
-                        });
-                    }
-                });
                 setTimeout(timedout, mili);
                 poll(correct);
                 await wait(mili);
