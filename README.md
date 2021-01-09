@@ -11,7 +11,7 @@ This bot is not built to be used on multiple servers, I designed it for my perso
 - [X] Make a server leaderboard.
 - [ ] Make an easy way to edit, remove and add questions.
 - [ ] Add the ability to play specific categories.
-- [ ] Add the ability to have multiple questions run concurrently.
+- [X] Add the ability to have multiple questions run concurrently.
 - [ ] Make concurrent questions show a match leaderboard aswell as the server leaderboard at the end.
 - [ ] Add the ability to change the bot prefix to.
 - [ ] Add user editable settings.

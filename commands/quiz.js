@@ -22,6 +22,7 @@ module.exports = {
             const questions = JSON.parse(fs.readFileSync('./data/questions.json').toString());
             const userData = JSON.parse(fs.readFileSync('./data/users.json'));
 
+            // players = [[isgeo, 1], [trjmt, 2], [diogenes, 11]] etc..
             const players = [];
 
             const PREFIX = process.env.PREFIX;
@@ -39,6 +40,7 @@ module.exports = {
             client.on('message', message2 => {
                 if (message2.channel.id == channelID && !message2.author.bot && timeout != true) {
 
+
                     var findUser = findElement(userData.users, "userid", message2.author.id);
                     var findIndex = getIndex(userData.users, "userid", message2.author.id);
                     if (findUser == null) {
@@ -48,10 +50,11 @@ module.exports = {
                             "username": message2.author.username,
                             "totalWins": 0
                         });
-                        players.push(message2.author.id);
                     } else {
                         totalWins = findUser.totalWins;
                     }
+
+                    players.push([message2.author.id, totalWins]);
 
                     var result = set.get(message2.content);
                     if (result != null) {
@@ -111,19 +114,14 @@ module.exports = {
                 message.channel.send(embededQ);
 
                 setTimeout(timedout, mili);
-                poll(correct);
                 await wait(mili);
             }
+
         } else {
             message.reply(`Incorrect syntax! Please input a numerical value!`);
         }
 
         // End if integer | ======================================================================================= |
-
-        function poll(correct) {
-            if (correct == false) { wait(1000); } else { console.log('POLL = CORRECT'); }
-        }
-
 
         function wait(miliseconds) {
             return new Promise(resolve => setTimeout(resolve, miliseconds));
